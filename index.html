@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Pokedex</title>
+
+	<!--Fonts-->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+	<div class="main">
+		<h2>POKEDEX</h2>
+		<br/>
+		<input id="quantidade" style="width: 100%; height: 40px; padding-left: 10px;"type="text" name="quantidade" placeholder="Insira a quantidade de pokemons..."/>
+		<div class="pokemon-boxes">
+
+			
+
+				
+
+		</div><!--pokemon-boxes-->
+	</div><!--main-->
+
+	<script>
+
+		var quantidade = document.getElementById("quantidade");
+		quantidade.addEventListener("keyup", ()=>{
+			pegarPokemons(quantidade.value);
+		})
+		
+			pegarPokemons(2);
+
+		function pegarPokemons(quantidade){
+			fetch("https://pokeapi.co/api/v2/pokemon?limit="+quantidade)
+			.then(response => response.json())
+			.then(allpokemon => {
+
+				var pokemons = [];
+
+				allpokemon.results.map((val) => {
+					
+
+
+					fetch(val.url)
+					.then(response => response.json())
+					.then(subPokemon => {
+						console.log(subPokemon);
+
+						pokemons.push({nome:val.name, imagem: subPokemon.sprites.front_default, altura: subPokemon.height, peso: subPokemon.weight});
+						if(pokemons.length == quantidade){
+
+
+
+							var pokemonBoxes = document.querySelector(".pokemon-boxes");
+							pokemonBoxes.innerHTML = "";
+							
+							pokemons.map(function(val){
+								
+
+
+								pokemonBoxes.innerHTML += `
+
+
+									<div class="pokemon-box">
+										<img src="`+val.imagem+`">
+										<p>`+val.nome+`</p>
+
+										<div style="background-color: #ccc; margin: 0 8px; border-radius: 4px; padding: 9px; text-align: left">
+											
+											<div style=" width: 50%; float: left"><label>Altura:</label></div>
+											<div style="width: 50%; float: left; text-align: right"><span>`+val.altura+`</span></div>
+											<div style="margin-bottom: 20px;"></div>
+											<div style=" width: 50%; float: left"><label >Peso:</label></div>
+											<div style="width: 50%; float: left; text-align: right"><span  style="text-align: right;">`+val.peso+`</span></div>
+
+											<div style="clear: both;"></div>
+
+										</div> 
+									</div><!--pokemon-box-->
+
+								`;
+
+
+
+								
+							})
+
+						}
+
+					})
+
+				
+
+
+				})
+
+			})
+		}
+
+
+	</script>
+
+</body>
+</html>
